@@ -77,7 +77,7 @@ export default {
       // ref获取表单的实例对象
       this.$refs.form.validate((isOK) => {
         if (isOK) {
-          alert('校验通过')
+          this.$store.dispatch('user/login', this.loginForm)// vuex
         }
       })
     }
