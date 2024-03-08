@@ -34,9 +34,10 @@ export default {
     return {
       // 登录数据
       loginForm: {
-        mobile: '',
-        password: '',
-        isAgree: false
+        // 区分环境
+        mobile: process.env.NODE_ENV === 'development' ? '13800000002' : '',
+        password: process.env.NODE_ENV === 'development' ? 'hm#qd@23!' : '',
+        isAgree: process.env.NODE_ENV === 'development'
       },
       // 登录规则
       // rule规则
@@ -76,9 +77,12 @@ export default {
   methods: {
     login() {
       // ref获取表单的实例对象
-      this.$refs.form.validate((isOK) => {
+      this.$refs.form.validate(async(isOK) => {
         if (isOK) {
-          this.$store.dispatch('user/login', this.loginForm)// vuex
+          await this.$store.dispatch('user/login', this.loginForm)// vuex
+          // vuex中的action 返回的是一个promise
+          // 登录成功后跳转到首页
+          this.$router.push('/')
         }
       })
     }
