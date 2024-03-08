@@ -4,7 +4,7 @@ import store from '@/store'
 import { Message } from 'element-ui'
 // 一 创建axios实例
 const service = axios.create({
-  baseURL: '/api',
+  baseURL: process.env.VUE_APP_BASE_API, // 区分开发环境和生产环境
   timeout: 10000
 })
 // 二 请求拦截器
