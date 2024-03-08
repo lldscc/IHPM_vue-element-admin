@@ -1,5 +1,7 @@
 // 导入封装好的缓存方法
 import { getToken, setToken, removeToken } from '@/utils/auth'
+
+import { login } from '@/api/user'
 const state = {
   token: getToken() // 从缓存中读取初始值
 }
@@ -20,11 +22,12 @@ const mutations = {
 
 const actions = {
   // context上下文,参数(手机号，密码)
-  login(context, data) {
+  async login(context, data) {
     console.log(data)
     // 调用登录接口
+    const token = await login(data)
     // 返回token
-    context.commit('setToken', '123456')
+    context.commit('setToken', token)
   }
 }
 
