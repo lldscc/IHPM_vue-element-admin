@@ -4,7 +4,7 @@
 2.访问登录页，有token进入主页，没有token进入登录页
 实现思路：
 1.在路由前置守卫中，开启进度条，判断是否有token，有token进入主页，没有token进入登录页，设置白名单，不需要验证的页面
-2.在路由后置守卫中，关闭进度条，判断是否有token，有token进入主页，没有token进入登录页
+2.在路由后置守卫中，关闭进度条
 */
 
 import router from './router'
@@ -16,7 +16,7 @@ const whiteList = ['/login', '/404']
 /*
 * 路由前置守卫：路由跳转之前进行的操作
  */
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   nProgress.start() // 开启进度条
   // 判断是否有token
   if (store.getters.token) {
@@ -27,6 +27,10 @@ router.beforeEach((to, from, next) => {
       next('/')
     } else {
       // 访问其他页面，有token，放行
+      // 通过vuex中userId判断是否有用户信息
+      if (!store.getters.userId) {
+        await store.dispatch('user/getUserInfo') // 获取用户信息
+      }
       next()
     }
   } else {

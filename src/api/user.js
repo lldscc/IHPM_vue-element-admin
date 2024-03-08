@@ -7,3 +7,11 @@ export function login(data) {
     data
   })
 }
+
+// 获取用户信息的请求接口模块
+export function getUserInfo() {
+  return request({
+    url: '/sys/profile',
+    method: 'get'
+  })
+}
