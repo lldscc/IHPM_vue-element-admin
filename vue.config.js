@@ -36,7 +36,12 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    // 解决跨域问题
+    proxy: {
+      '/api': {
+        target: 'https://heimahr.itheima.net/'
+      }
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
