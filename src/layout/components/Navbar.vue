@@ -44,15 +44,16 @@
       :before-close="handleClose"
       :modal="false"
     >
-      <el-form ref="form" :model="form" label-width="80px">
+      <!-- ref:获取表单的实例 model：绑定表单数据  rules：表单的规则-->
+      <el-form ref="passform" :model="passform" :rules="rules" label-width="80px">
         <el-form-item label="原密码" prop="oldPassword">
-          <el-input type="password" />
+          <el-input v-model="passform.oldPassword" type="password" show-password />
         </el-form-item>
         <el-form-item label="新密码" prop="newPassword">
-          <el-input type="password" />
+          <el-input v-model="passform.newPassword" type="password" show-password />
         </el-form-item>
         <el-form-item label="确认密码" prop="confirmPassword">
-          <el-input type="password" />
+          <el-input v-model="passform.confirmPassword" type="password" show-password />
         </el-form-item>
         <el-form-item>
           <el-button @click="dialogVisible = false">取 消</el-button>
@@ -76,7 +77,20 @@ export default {
   },
   data() {
     return {
-      dialogVisible: false
+      // 控制dialog的显示与隐藏
+      dialogVisible: false,
+      // 表单数据
+      passform: {
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      },
+      // 表单验证规则
+      rules: {
+        oldPassword: [{ required: true, message: '请输入原密码' }],
+        newPassword: [{ required: true, message: '请输入新密码' }],
+        confirmPassword: [{ required: true, message: '请输入新密码' }]
+      }
     }
   },
   computed: {
