@@ -15,3 +15,12 @@ export function getUserInfo() {
     method: 'get'
   })
 }
+
+// 更新密码的请求接口模块
+export function updatePassword(data) {
+  return request({
+    url: '/sys/user/updatePass',
+    method: 'put',
+    data
+  })
+}

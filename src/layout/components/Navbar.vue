@@ -41,8 +41,8 @@
       title="修改密码"
       :visible.sync="dialogVisible"
       width="35%"
-      :before-close="handleClose"
       :modal="false"
+      @close="btnCancel"
     >
       <!-- ref:获取表单的实例 model：绑定表单数据  rules：表单的规则-->
       <el-form ref="passform" :model="passform" :rules="rules" label-width="80px">
@@ -56,8 +56,8 @@
           <el-input v-model="passform.confirmPassword" type="password" show-password />
         </el-form-item>
         <el-form-item>
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          <el-button @click="btnOK">取 消</el-button>
+          <el-button type="primary" @click="btnCancel">确 定</el-button>
         </el-form-item>
       </el-form>
 
@@ -69,6 +69,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import { updatePassword } from '@/api/user'
 
 export default {
   components: {
@@ -127,7 +128,26 @@ export default {
       await this.$store.dispatch('user/logout')
       // 跳转到登录页
       this.$router.push('/login')
+    },
+    // 确认
+    btnOK() {
+      // 校验表单
+      this.$refs.passform.validate(async isOK => {
+        if (isOK) {
+          // 调用接口
+          await updatePassword(this.passform)
+          this.$message.success('修改成功')
+          // 重置表单
+          this.$refs.passform.resetFields()
+          this.dialogVisible = false
+        }
+      })
+    },
+    btnCancel() {
+      this.dialogVisible = false
+      this.$refs.passform.resetFields()
     }
+
   }
 }
 </script>
