@@ -24,7 +24,8 @@
           <a target="_blank" href="https://github.com/lldscc/IHPM_vue-element-admin">
             <el-dropdown-item>项目地址</el-dropdown-item>
           </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
+          <!-- prevent修饰符，阻止默认事件 -->
+          <a target="_blank" @click.prevent="updatePassword">
             <el-dropdown-item>修改密码</el-dropdown-item>
           </a>
           <!-- native:事件修饰符： 注册组件的根元素的原生事件-->
@@ -35,6 +36,20 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <!-- dialog弹出层 -->
+    <el-dialog
+      title="修改密码"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+      :modal="false"
+    >
+      <span>这是一段信息</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -48,6 +63,11 @@ export default {
     Breadcrumb,
     Hamburger
   },
+  data() {
+    return {
+      dialogVisible: false
+    }
+  },
   computed: {
     // 从 store 中获取数据
     ...mapGetters([
@@ -59,6 +79,10 @@ export default {
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
+    },
+    // 修改密码 弹出对话框
+    updatePassword() {
+      this.dialogVisible = true
     },
     async logout() {
       // 退出登录
