@@ -40,15 +40,26 @@
     <el-dialog
       title="修改密码"
       :visible.sync="dialogVisible"
-      width="30%"
+      width="35%"
       :before-close="handleClose"
       :modal="false"
     >
-      <span>这是一段信息</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </span>
+      <el-form ref="form" :model="form" label-width="80px">
+        <el-form-item label="原密码" prop="oldPassword">
+          <el-input type="password" />
+        </el-form-item>
+        <el-form-item label="新密码" prop="newPassword">
+          <el-input type="password" />
+        </el-form-item>
+        <el-form-item label="确认密码" prop="confirmPassword">
+          <el-input type="password" />
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        </el-form-item>
+      </el-form>
+
     </el-dialog>
   </div>
 </template>
