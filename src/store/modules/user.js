@@ -16,7 +16,7 @@ const mutations = {
     // 同步到缓存
     setToken(token)
   },
-  removeToken() {
+  removeToken(state) {
     // 删除token
     state.token = null
     removeToken()
@@ -43,6 +43,13 @@ const actions = {
     // console.log('获取用户信息')
     const result = await getUserInfo()
     context.commit('setUserInfo', result) // 提交到mutations,存储用户信息
+  },
+  // 退出登录
+  logout(context) {
+    // 清除token
+    context.commit('removeToken') // 提交到mutations
+    // 清除用户信息
+    context.commit('setUserInfo', {}) // 提交到mutations
   }
 }
 

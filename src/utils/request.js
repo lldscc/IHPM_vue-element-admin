@@ -2,6 +2,7 @@ import axios from 'axios'
 // 导入token工具函数
 import store from '@/store'
 import { Message } from 'element-ui'
+import router from '@/router'
 // 一 创建axios实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // 区分开发环境和生产环境
@@ -32,7 +33,15 @@ service.interceptors.response.use((response) => {
     Message({ type: 'error', message })
     return Promise.reject(new Error(message))
   }
-}, (error) => {
+}, async(error) => {
+  if (error.response.status === 401) {
+    Message({ type: 'error', message: '登录状态无效，请重新登录' })
+    // token过期,清除token
+    await store.dispatch('user/logout') // 调用退出登录的action
+    // 跳转到登录页
+    router.push('/login')
+    return Promise.reject(error)
+  }
   // 对响应错误做点什么
   Message({ type: 'error', message: error.message })
 })
