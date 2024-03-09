@@ -87,9 +87,21 @@ export default {
       },
       // 表单验证规则
       rules: {
-        oldPassword: [{ required: true, message: '请输入原密码' }],
-        newPassword: [{ required: true, message: '请输入新密码' }],
-        confirmPassword: [{ required: true, message: '请输入新密码' }]
+        oldPassword: [{ required: true, message: '请输入原密码', trigger: 'blur' }],
+        newPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }, { min: 6, max: 16, message: '密码长度6位-16位', trigger: 'blur' }],
+        confirmPassword: [
+          { required: true, message: '请输入新密码', trigger: 'blur' },
+          { trigger: 'blur',
+            validator: (rule, value, callback) => {
+              // 使用箭头函数，this指向外层作用域
+              if (this.passform.oldPassword === value) {
+                callback(new Error('新密码不能与原密码相同'))
+              } else if (this.passform.newPassword === value) {
+                callback() // 校验通过
+              } else {
+                callback(new Error('两次输入的密码不一致'))
+              }
+            } }]
       }
     }
   },
