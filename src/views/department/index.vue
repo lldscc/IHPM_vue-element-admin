@@ -33,41 +33,29 @@
 </template>
 
 <script>
+import { getDepartment } from '@/api/department'
 export default {
   name: 'Department',
   data() {
     return {
-      dapts: [
-        {
-          name: '传智教育',
-          managerName: '管理员',
-          children: [
-            {
-              name: '总裁办',
-              managerName: '张三'
-
-            },
-            {
-              name: '行政部',
-              managerName: '小明'
-
-            },
-            {
-              name: '人事部',
-              managerName: '小李'
-
-            }
-          ]
-        }
-      ],
+      dapts: [],
       defaultProps: {
         children: 'children', // 子节点字段
         label: 'name' // 显示的字段
       }
     }
   },
-  created() {},
-  methods: {}
+  created() {
+    this.getDepartment()
+  },
+  methods: {
+    // 声明一个方法，用来获取部门列表
+    async getDepartment() {
+      const result = await getDepartment() // 获取部门列表的请求
+      this.dapts = result
+    }
+
+  }
 }
 </script>
 
