@@ -1,26 +1,32 @@
 <template>
   <div class="container">
     <div class="app-container">
-      <el-tree :data="dapts" :props="defaultProps" :default-expand-all="true">
+      <el-tree :data="dapts" :props="defaultProps" default-expand-all>
         <!-- 自定义节点结构 -->
-        <el-row
-          type="flex"
-          justify="space-between"
-          style="width: 100%; height: 40px;align-items: center;"
-        >
-          <el-col>传智教育</el-col>
-          <el-col :span="4">
-            <span class="textG">管理员</span>
-            <span class="el-dropdown-link">
-              操作<i class="el-icon-arrow-down el-icon--right" />
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>添加子部门</el-dropdown-item>
-              <el-dropdown-item>编辑部门</el-dropdown-item>
-              <el-dropdown-item>删除</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-col>
-        </el-row>
+        <!-- v-slot ={ node,data} 只能作用在template-->
+        <template v-slot="{data}">
+          <el-row
+            type="flex"
+            justify="space-between"
+            style="width: 100%; height: 40px;align-items: center;"
+          >
+            <el-col>{{ data.name }}</el-col>
+            <el-col :span="4">
+              <span class="textG">{{ data.managerName }}</span>
+              <el-dropdown>
+                <span class="el-dropdown-link">
+                  操作<i class="el-icon-arrow-down el-icon--right" />
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>添加子部门</el-dropdown-item>
+                  <el-dropdown-item>编辑部门</el-dropdown-item>
+                  <el-dropdown-item>删除</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+
+            </el-col>
+          </el-row>
+        </template>
       </el-tree>
     </div>
   </div>
@@ -34,15 +40,22 @@ export default {
       dapts: [
         {
           name: '传智教育',
+          managerName: '管理员',
           children: [
             {
-              name: '总裁办'
+              name: '总裁办',
+              managerName: '张三'
+
             },
             {
-              name: '行政部'
+              name: '行政部',
+              managerName: '小明'
+
             },
             {
-              name: '人事部'
+              name: '人事部',
+              managerName: '小李'
+
             }
           ]
         }
@@ -67,6 +80,5 @@ export default {
   color: #67c23a;
   display: inline-block;
   margin-right: 30px;
-  user-select: none;
 }
 </style>
