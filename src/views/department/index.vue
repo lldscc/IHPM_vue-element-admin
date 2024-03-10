@@ -34,6 +34,7 @@
 
 <script>
 import { getDepartment } from '@/api/department'
+import { transListToTree } from '@/utils'
 export default {
   name: 'Department',
   data() {
@@ -52,7 +53,7 @@ export default {
     // 声明一个方法，用来获取部门列表
     async getDepartment() {
       const result = await getDepartment() // 获取部门列表的请求
-      this.dapts = result
+      this.dapts = transListToTree(result, 0) // 将部门列表转换为树形结构
     }
 
   }
