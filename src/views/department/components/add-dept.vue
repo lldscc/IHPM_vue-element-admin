@@ -2,8 +2,8 @@
   <!-- 对话框组件 visible属性控制显示隐藏  -->
   <el-dialog
     title="新增部门"
-    :visible.sync="dialogVisible"
-    width="30%"
+    :visible="showDialog"
+    @close="close"
   >
     <el-form label-width="120px">
       <el-form-item label="部门名称">
@@ -35,13 +35,16 @@
 export default {
   // 通过props接收父组件传递的值
   props: {
-    dialogVisible: {
+    showDialog: {
       type: Boolean,
       default: false
     }
   },
   methods: {
-
+    close() {
+      // 通过$emit触发父组件的事件 子传父
+      this.$emit('update:showDialog', false)
+    }
   }
 
 }

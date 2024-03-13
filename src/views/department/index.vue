@@ -33,7 +33,7 @@
     </div>
     <!-- 操作对话框组件 -->
     <!-- sync修饰符 =》会接受子组件的事件 update：dialogVisible值 -->
-    <AppDept :dialog-visible="showDialog" />
+    <AppDept :show-dialog.sync="showDialog" />
   </div>
 </template>
 
@@ -67,14 +67,9 @@ export default {
     },
     // 下拉菜单点击事件
 
-    operateDept(command) {
-      if (command === 'add') {
+    operateDept(type) {
+      if (type === 'add') {
         this.showDialog = true
-        this.$message('添加子部门')
-      } else if (command === 'edit') {
-        this.$message('编辑部门')
-      } else if (command === 'del') {
-        this.$message('删除')
       }
     }
 

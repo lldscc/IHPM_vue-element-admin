@@ -1,6 +1,6 @@
 module.exports = {
   // 网站标题
-  title: 'IHRM人力资源',
+  title: 'IHRM人力资源(Test)',
 
   /**
    * @type {boolean} true | false
