@@ -36,6 +36,7 @@
   </el-dialog></template>
 
 <script>
+import { getDepartment } from '@/api/department'
 export default {
   // 通过props接收父组件传递的值
   props: {
@@ -55,9 +56,23 @@ export default {
         pid: '' // 上级部门id
       },
       // 表单验证的规则
+      /**
+       *trigger: 触发方式 blur失去焦点 change改变
+       *
+      */
       rules: {
         code: [{ required: true, message: '部门编码不能为空', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }],
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
+          // 自定义验证规则 => 通过validator函数验证=>部门编码的重复校验
+          { trigger: 'blur', validator: async(rule, value, callback) => {
+            // value: 当前输入的值 调用获取部门列表的接口，看是否有重复的部门编码，数组方法some
+            const result = await getDepartment()
+            if (result.some(item => item.code === value)) {
+              callback(new Error('该部门编码已存在'))
+            } else {
+              callback() // 校验通过
+            }
+          } }],
 
         introduce: [{ required: true, message: '部门介绍不能为空', trigger: 'blur' },
           { min: 1, max: 100, message: '长度在 20 到 100 个字符', trigger: 'blur' }],
@@ -65,7 +80,17 @@ export default {
         managerId: [{ required: true, message: '部门负责人不能为空', trigger: 'blur' }],
 
         name: [{ required: true, message: '部门名称不能为空', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }]
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
+          // 自定义验证规则 => 部门名称的重复校验
+          { trigger: 'blur', validator: async(rule, value, callback) => {
+            const result = await getDepartment()
+            if (result.some(item => item.name === value)) {
+              callback(new Error('该部门名称已存在'))
+            } else {
+              callback()
+            }
+          } }
+        ]
       }
     }
   },
