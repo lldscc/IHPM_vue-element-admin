@@ -17,7 +17,17 @@
         <el-input v-model="formData.code" placeholder="2-10个字符" style="width: 80%;" />
       </el-form-item>
       <el-form-item label="部门负责人" prop="managerId">
-        <el-select v-model="formData.managerId" placeholder="选择负责人" style="width: 40%;" />
+        <!-- el-select选择器
+        v-model的值为当前被选中的el-option的 value 属性值
+        label为el-option的显示内容-->
+        <el-select v-model="formData.managerId" placeholder="选择负责人" style="width: 40%;">
+          <el-option
+            v-for="item in managerList"
+            :key="item.id"
+            :label="item.username"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="部门介绍" prop="introduce">
         <el-input v-model="formData.introduce" type="textarea" :rows="4" placeholder="20-100字符" />
@@ -37,6 +47,7 @@
 
 <script>
 import { getDepartment } from '@/api/department'
+import { getManagerList } from '@/api/department'
 export default {
   // 通过props接收父组件传递的值
   props: {
@@ -91,13 +102,22 @@ export default {
             }
           } }
         ]
-      }
+      },
+      managerList: []
     }
+  },
+  created() {
+    // 获取部门负责人列表
+    this.getManagerList()
   },
   methods: {
     close() {
       // 通过$emit触发父组件的事件 子传父
       this.$emit('update:showDialog', false)
+    },
+    // 负责人数据
+    async getManagerList() {
+      this.managerList = await getManagerList()
     }
   }
 
