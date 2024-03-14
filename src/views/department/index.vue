@@ -35,7 +35,8 @@
     <!-- 操作对话框组件 -->
     <!-- sync修饰符 =》会接受子组件的事件 update：dialogVisible值 -->
     <!-- id传给子组件 -->
-    <AppDept :show-dialog.sync="showDialog" :current-node-id="currentNodeId" />
+    <!-- 父组件监听updateDepartment事件 -->
+    <AppDept :show-dialog.sync="showDialog" :current-node-id="currentNodeId" @updateDepartment="getDepartment" />
   </div>
 </template>
 

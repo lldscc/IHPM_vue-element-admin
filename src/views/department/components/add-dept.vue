@@ -35,10 +35,10 @@
       <el-form-item>
         <el-row type="flex" justify="center">
           <el-col>
-            <el-button type="primary">提交</el-button>
+            <el-button type="primary" @click="btnOK()">确定</el-button>
           </el-col>
           <el-col>
-            <el-button>取消</el-button>
+            <el-button @click="close()">取消</el-button>
           </el-col>
         </el-row>
       </el-form-item>
@@ -46,8 +46,7 @@
   </el-dialog></template>
 
 <script>
-import { getDepartment } from '@/api/department'
-import { getManagerList } from '@/api/department'
+import { getDepartment, getManagerList, addDepartment } from '@/api/department'
 export default {
   // 通过props接收父组件传递的值
   props: {
@@ -120,11 +119,27 @@ export default {
     close() {
       // 通过$emit触发父组件的事件 子传父
       this.$emit('update:showDialog', false)
+      this.$refs.addDept.resetFields() // 重置表单
     },
     // 负责人数据
     async getManagerList() {
       this.managerList = await getManagerList()
+    },
+    // 确定按钮
+    btnOK() {
+      // 调用表单的验证方法 validate:验证 valid:验证结果
+      this.$refs.addDept.validate(async isOK => {
+        if (isOK) {
+          await addDepartment({ ...this.formData, pid: this.currentNodeId })
+          // 通知父组件更新
+          this.$emit('updateDepartment')
+          // 提示消息
+          this.$message.success(`新增部门成功`)
+          this.close()
+        }
+      })
     }
+
   }
 
 }
