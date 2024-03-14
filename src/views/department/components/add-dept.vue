@@ -51,6 +51,12 @@ import { getManagerList } from '@/api/department'
 export default {
   // 通过props接收父组件传递的值
   props: {
+    // 记录id
+    currentNodeId: {
+      type: Number,
+      default: null
+    },
+    // 对话框弹窗相关
     showDialog: {
       type: Boolean,
       default: false

@@ -15,7 +15,8 @@
               <span class="textG">{{ data.managerName }}</span>
               <!-- 下拉菜单 -->
               <!-- 使用组件中的事件完成点击事件 -->
-              <el-dropdown @command="operateDept">
+              <!-- 记录部门id,传给子组件-->
+              <el-dropdown @command="operateDept($event, data.id)">
                 <span class="el-dropdown-link">
                   操作<i class="el-icon-arrow-down el-icon--right" />
                 </span>
@@ -33,7 +34,8 @@
     </div>
     <!-- 操作对话框组件 -->
     <!-- sync修饰符 =》会接受子组件的事件 update：dialogVisible值 -->
-    <AppDept :show-dialog.sync="showDialog" />
+    <!-- id传给子组件 -->
+    <AppDept :show-dialog.sync="showDialog" :current-node-id="currentNodeId" />
   </div>
 </template>
 
@@ -50,6 +52,7 @@ export default {
     return {
       showDialog: false, // 控制弹窗显示隐藏
       dapts: [],
+      currentNodeId: null, // 存储当前点击的节点id
       defaultProps: {
         children: 'children', // 子节点字段
         label: 'name' // 显示的字段
@@ -60,16 +63,17 @@ export default {
     this.getDepartment()
   },
   methods: {
-    // 声明一个方法，用来获取部门列表
+    // 获取部门列表
     async getDepartment() {
       const result = await getDepartment() // 获取部门列表的请求
       this.dapts = transListToTree(result, 0) // 将部门列表转换为树形结构
     },
     // 下拉菜单点击事件
 
-    operateDept(type) {
+    operateDept(type, id) {
       if (type === 'add') {
-        this.showDialog = true
+        this.showDialog = true // 显示弹窗
+        this.currentNodeId = id // 记录当前点击的节点id
       }
     }
 
