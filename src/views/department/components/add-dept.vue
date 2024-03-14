@@ -5,6 +5,7 @@
     :visible="showDialog"
     @close="close"
   >
+    <!-- 表单 -->
     <el-form label-width="120px">
       <el-form-item label="部门名称">
         <el-input placeholder="2-10个字符" style="width: 80%;" />
