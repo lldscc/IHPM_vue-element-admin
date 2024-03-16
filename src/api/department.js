@@ -23,3 +23,10 @@ export function addDepartment(data) {
     data
   })
 }
+
+// 4.修改部门详情的请求接口模块
+export function getDepartmentDetail(id) {
+  return request({
+    url: `/company/department/${id}`
+  })
+}

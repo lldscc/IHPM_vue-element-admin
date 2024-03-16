@@ -14,7 +14,7 @@
             <el-col :span="4">
               <span class="textG">{{ data.managerName }}</span>
               <!-- 下拉菜单 -->
-              <!-- 使用组件中的事件完成点击事件 -->
+              <!-- 使用组件中的事件完成点击事件 command 是用来指定自定义事件码的属性-->
               <!-- 记录部门id,传给子组件-->
               <el-dropdown @command="operateDept($event, data.id)">
                 <span class="el-dropdown-link">
@@ -35,8 +35,9 @@
     <!-- 操作对话框组件 -->
     <!-- sync修饰符 =》会接受子组件的事件 update：dialogVisible值 -->
     <!-- id传给子组件 -->
-    <!-- 父组件监听updateDepartment事件 -->
-    <AppDept :show-dialog.sync="showDialog" :current-node-id="currentNodeId" @updateDepartment="getDepartment" />
+    <!-- 父组件监听updateDepartment事件，调用 getDepartment方法-->
+    <!-- ref 可以获取dom实例对象 也可以获取自定义组件的实例对象 -->
+    <AppDept ref="addDept" :show-dialog.sync="showDialog" :current-node-id="currentNodeId" @updateDepartment="getDepartment" />
   </div>
 </template>
 
@@ -73,11 +74,23 @@ export default {
 
     operateDept(type, id) {
       if (type === 'add') {
+        // 添加业务
         this.showDialog = true // 显示弹窗
         this.currentNodeId = id // 记录当前点击的节点id
+      } else if (type === 'edit') {
+        // 编辑业务
+        this.showDialog = true
+        this.currentNodeId = id // 记录当前点击的节点id，要用它获取数据
+        // 上步赋值id，是更新props 异步动作
+        // 直接调用子组件的方法 是同步动作
+        // 同步动作先执行，异步动作后执行，就无法获取到数据id
+        // 解决方法：this.$nextTick() 会在下次dom更新后执行
+        this.$nextTick(() => {
+        // 要在父组件获取数据，父组件调用子组件的方法获取数据ref
+          this.$refs.addDept.getDepartmentDetail() // this.$refs.addDept相当于子组件的this
+        })
       }
     }
-
   }
 }
 </script>

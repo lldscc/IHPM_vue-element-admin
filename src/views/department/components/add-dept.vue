@@ -46,7 +46,7 @@
   </el-dialog></template>
 
 <script>
-import { getDepartment, getManagerList, addDepartment } from '@/api/department'
+import { getDepartment, getManagerList, addDepartment, getDepartmentDetail } from '@/api/department'
 export default {
   // 通过props接收父组件传递的值
   props: {
@@ -137,6 +137,14 @@ export default {
           this.$message.success(`新增部门成功`)
           this.close()
         }
+      })
+    },
+    // 获取 组织的详情
+    // 该方法是在父组件中调用的，父组件通过ref获取子组件的实例对象，然后调用该方法
+    async getDepartmentDetail() {
+      // 修改业务
+      await getDepartmentDetail(this.currentNodeId).then(result => {
+        this.formData = result
       })
     }
 
