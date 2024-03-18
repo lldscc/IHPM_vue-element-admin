@@ -81,8 +81,13 @@ export default {
           { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
           // 自定义验证规则 => 通过validator函数验证=>部门编码的重复校验
           { trigger: 'blur', validator: async(rule, value, callback) => {
+            let result = await getDepartment()
+            // 通过id判定是新增还是编辑 编辑有ID 新增没有ID
+            if (this.formData.id) {
+              // 编辑业务
+              result = result.filter(item => item.id !== this.formData.id) // 过滤掉当前编辑的部门
+            }
             // value: 当前输入的值 调用获取部门列表的接口，看是否有重复的部门编码，数组方法some
-            const result = await getDepartment()
             if (result.some(item => item.code === value)) {
               callback(new Error('该部门编码已存在'))
             } else {
@@ -99,7 +104,10 @@ export default {
           { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
           // 自定义验证规则 => 部门名称的重复校验
           { trigger: 'blur', validator: async(rule, value, callback) => {
-            const result = await getDepartment()
+            let result = await getDepartment()
+            if (this.formData.id) {
+              result = result.filter(item => item.id !== this.formData.id)
+            }
             if (result.some(item => item.name === value)) {
               callback(new Error('该部门名称已存在'))
             } else {
