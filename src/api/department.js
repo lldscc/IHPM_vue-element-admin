@@ -30,3 +30,11 @@ export function getDepartmentDetail(id) {
     url: `/company/department/${id}`
   })
 }
+// 5.更新部门的请求接口模块
+export function updateDepartment(data) {
+  return request({
+    method: 'put',
+    url: `/company/department/${data.id}`,
+    data
+  })
+}

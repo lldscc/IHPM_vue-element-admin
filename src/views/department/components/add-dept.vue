@@ -46,7 +46,7 @@
   </el-dialog></template>
 
 <script>
-import { getDepartment, getManagerList, addDepartment, getDepartmentDetail } from '@/api/department'
+import { getDepartment, getManagerList, addDepartment, getDepartmentDetail, updateDepartment } from '@/api/department'
 export default {
   // 通过props接收父组件传递的值
   props: {
@@ -138,11 +138,20 @@ export default {
       // 调用表单的验证方法 validate:验证 valid:验证结果
       this.$refs.addDept.validate(async isOK => {
         if (isOK) {
-          await addDepartment({ ...this.formData, pid: this.currentNodeId })
+          let msg = '新增'
+          // 通过id判定是新增还是编辑 编辑有ID 新增没有ID
+          if (this.formData.id) {
+            // 编辑业务
+            msg = '更新'
+            await updateDepartment(this.formData)
+          } else {
+            // 新增业务
+            await addDepartment({ ...this.formData, pid: this.currentNodeId })
+          }
           // 通知父组件更新
           this.$emit('updateDepartment')
           // 提示消息
-          this.$message.success(`新增部门成功`)
+          this.$message.success(`${msg}部门成功`)
           this.close()
         }
       })
