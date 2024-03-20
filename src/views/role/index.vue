@@ -3,7 +3,7 @@
     <div class="app-container">
       <!-- 管理内容 -->
       <div class="role-operate">
-        <el-button size="small " type="primary">添加角色</el-button>
+        <el-button size="small " type="primary" @click="showDialog=true">添加角色</el-button>
       </div>
       <!-- table 组件 -->
       <el-table :data="rolelist">
@@ -41,6 +41,27 @@
         />
       </el-row>
     </div>
+
+    <!-- 弹层组件Dialog -->
+    <el-dialog title="新增角色" width="500px" :visible.sync="showDialog">
+      <el-form label-width="100px">
+        <el-form-item label="角色名称">
+          <el-input style="width:300px" size="mini" />
+        </el-form-item>
+        <el-form-item label="启动">
+          <el-switch size="mini" />
+        </el-form-item>
+        <el-form-item label="角色描述">
+          <el-input type="textarea" :rows="3" style="width:300px" size="mini" />
+        </el-form-item>
+        <el-form-item>
+          <el-row type="flex" justify="space-between" style="width:300px">
+            <el-button type="primary" size="small">确定</el-button>
+            <el-button size="mini">取消</el-button>
+          </el-row>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -56,7 +77,8 @@ export default {
         page: 1, // 第几页
         pagesize: 5, // 每页多少条
         total: 0 // 总条数
-      }
+      },
+      showDialog: false // 控制弹层显示隐藏
     }
   },
   created() {
