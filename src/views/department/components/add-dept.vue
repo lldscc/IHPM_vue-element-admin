@@ -1,7 +1,7 @@
 <template>
   <!-- 对话框组件 visible属性控制显示隐藏  -->
   <el-dialog
-    title="新增部门"
+    :title="showTitile"
     :visible="showDialog"
     @close="close"
   >
@@ -119,15 +119,28 @@ export default {
       managerList: []
     }
   },
+  computed: {
+    // 根据id判断是新增还是编辑
+    showTitile() {
+      return this.formData.id ? '编辑部门' : '新增部门'
+    }
+  },
   created() {
     // 获取部门负责人列表
     this.getManagerList()
   },
   methods: {
     close() {
+      this.formData = {
+        code: '', // 部门编码
+        introduce: '', // 部门介绍
+        managerId: '', // 部门负责人id
+        name: '', // 部门名称
+        pid: '' // 父级部门的id
+      }
       // 通过$emit触发父组件的事件 子传父
       this.$emit('update:showDialog', false)
-      this.$refs.addDept.resetFields() // 重置表单
+      this.$refs.addDept.resetFields() // 重置表单 重置在模板中绑定的数据
     },
     // 负责人数据
     async getManagerList() {
