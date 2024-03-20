@@ -8,10 +8,10 @@
       <!-- table 组件 -->
       <el-table :data="rolelist">
 
-        <el-table-column type="index" label="序号" highlight-current-row="true" align="center" />
+        <el-table-column label="序号" width="200" highlight-current-row="true" align="center" prop="id" />
         <el-table-column label="角色" width="200" align="center" prop="name" />
         <el-table-column label="启用" width="200" align="center" prop="state">
-          <!-- 自定义结构 -->
+          <!-- 自定义结构 {{ ？？？ }} -->
           <template v-slot="{ row }">
             <span>  {{ row.state === 1 ? "已启用" : row.state === 0 ? "未启用" : "无" }} </span>
           </template>
@@ -29,9 +29,16 @@
       </el-table>
 
       <!-- 分页组件 -->
-      <el-row type="flex" style="height:60px" align="middle" justify="end">
-        <!-- 放置分页组件 -->
-        <el-pagination layout="prev, pager, next" />
+      <el-row type="flex" style="height:60px" align="middle" justify="center">
+        <!-- 放置分页组件 total：总数量  page-size：每页显示条目个数  current-page：当前页数  current-change方法：currentPage 改变时会触发-->
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="pageParams.total"
+          :page-size="pageParams.pagesize"
+          :current-page="pageParams.page"
+          @current-change="changePage"
+        />
       </el-row>
     </div>
   </div>
@@ -43,20 +50,30 @@ export default {
   name: 'Role',
   data() {
     return {
-      rolelist: []
+      rolelist: [],
+      // 分页数据
+      pageParams: {
+        page: 1, // 第几页
+        pagesize: 5, // 每页多少条
+        total: 0 // 总条数
+      }
     }
   },
   created() {
     this.getRoleList()
-    console.log(this.rolelist)
   },
   methods: {
     // 获取角色列表
     async getRoleList() {
-      // const res = await getRoleList()
-      // this.rolelist = res.data.rows
-      const { rows } = await getRoleList()
-      this.rolelist = rows // 赋值数据
+      const { rows, total } = await getRoleList(this.pageParams) // 参数：page 当前页码数；pagesize 每页多少条
+      this.rolelist = rows // 每条赋值给表格数据
+      // 总数据赋值给分页数据
+      this.pageParams.total = total
+    },
+    // 分页的功能
+    changePage(page) {
+      this.pageParams.page = page
+      this.getRoleList()
     }
   }
 }
