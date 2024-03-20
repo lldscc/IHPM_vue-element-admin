@@ -42,17 +42,20 @@
       </el-row>
     </div>
 
-    <!-- 弹层组件Dialog -->
+    <!-- 弹层组件Dialog 表单from-->
     <el-dialog title="新增角色" width="500px" :visible.sync="showDialog">
-      <el-form label-width="100px">
-        <el-form-item label="角色名称">
-          <el-input style="width:300px" size="mini" />
+      <!-- 绑定数据校验 -->
+      <el-form ref="roleForm" label-width="100px" :model="roleForm" :rules="rules">
+        <!-- 校验字段 prop="name" -->
+        <el-form-item label="角色名称" prop="name">
+          <el-input v-model="roleForm.name" style="width:300px" size="mini" />
         </el-form-item>
         <el-form-item label="启动">
-          <el-switch size="mini" />
+          <!-- active-value="1" 和 inactive-value="0" 是 <el-switch> 组件中的两个属性，它们指定了开关在开启和关闭状态时所对应的值。 -->
+          <el-switch v-model="roleForm.state" size="mini" :active-value="1" :inactive-value="0" />
         </el-form-item>
-        <el-form-item label="角色描述">
-          <el-input type="textarea" :rows="3" style="width:300px" size="mini" />
+        <el-form-item label="角色描述" prop="description">
+          <el-input v-model="roleForm.description" type="textarea" :rows="3" style="width:300px" size="mini" />
         </el-form-item>
         <el-form-item>
           <el-row type="flex" justify="space-between" style="width:300px">
@@ -78,7 +81,21 @@ export default {
         pagesize: 5, // 每页多少条
         total: 0 // 总条数
       },
-      showDialog: false // 控制弹层显示隐藏
+      showDialog: false, // 控制弹层显示隐藏
+
+      // 新增弹窗表单的数据
+      roleForm: {
+        name: '',
+        description: '',
+        state: 0 // 默认启用 关闭 0 ； 打开1
+      },
+      // 新增的表单规则
+      rules: {
+        name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
+        description: [{ required: true, message: '请输入角色描述', trigger: 'blur' }]
+
+      }
+
     }
   },
   created() {
