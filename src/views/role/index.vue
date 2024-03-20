@@ -10,9 +10,21 @@
 
         <el-table-column type="index" label="序号" highlight-current-row="true" align="center" />
         <el-table-column label="角色" width="200" align="center" prop="name" />
-        <el-table-column label="启用" width="200" align="center" prop="state" />
+        <el-table-column label="启用" width="200" align="center" prop="state">
+          <!-- 自定义结构 -->
+          <template v-slot="{ row }">
+            <span>  {{ row.state === 1 ? "已启用" : row.state === 0 ? "未启用" : "无" }} </span>
+          </template>
+        </el-table-column>
         <el-table-column label="描述" align="center" prop="description" />
-        <el-table-column label="操作" align="center" />
+        <el-table-column label="操作" align="center">
+          <!-- 放置操作按钮 -->
+          <template>
+            <el-button size="mini" type="text">分配权限</el-button>
+            <el-button size="mini" type="text">编辑</el-button>
+            <el-button size="mini" type="text">删除</el-button>
+          </template>
+        </el-table-column>
 
       </el-table>
 
