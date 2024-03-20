@@ -7,3 +7,11 @@ export function getRoleList(params) {
     params // 查询参数
   })
 }
+// 2.新增角色的请求接口模块
+export function addRole(data) {
+  return request({
+    url: '/sys/role',
+    method: 'post',
+    data
+  })
+}

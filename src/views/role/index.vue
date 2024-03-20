@@ -43,7 +43,8 @@
     </div>
 
     <!-- 弹层组件Dialog 表单from-->
-    <el-dialog title="新增角色" width="500px" :visible.sync="showDialog">
+    <!-- ???::visible.sync="showDialog" @close="btnCancel" -->
+    <el-dialog title="新增角色" width="500px" :visible.sync="showDialog" @close="btnCancel">
       <!-- 绑定数据校验 -->
       <el-form ref="roleForm" label-width="100px" :model="roleForm" :rules="rules">
         <!-- 校验字段 prop="name" -->
@@ -59,8 +60,8 @@
         </el-form-item>
         <el-form-item>
           <el-row type="flex" justify="space-between" style="width:300px">
-            <el-button type="primary" size="small">确定</el-button>
-            <el-button size="mini">取消</el-button>
+            <el-button type="primary" size="small" @click="btnOK">确定</el-button>
+            <el-button size="mini" @click="btnCancel">取消</el-button>
           </el-row>
         </el-form-item>
       </el-form>
@@ -69,7 +70,7 @@
 </template>
 <script>
 // 获取请求方法
-import { getRoleList } from '@/api/role'
+import { getRoleList, addRole } from '@/api/role'
 export default {
   name: 'Role',
   data() {
@@ -113,6 +114,24 @@ export default {
     changePage(page) {
       this.pageParams.page = page
       this.getRoleList()
+    },
+
+    // 确认业务
+    btnOK() {
+      this.$refs.roleForm.validate(async isOK => {
+        if (isOK) {
+          // 调用新增角色接口
+          await addRole(this.roleForm)
+          this.$message.success('新增角色成功')
+          this.getRoleList()
+          this.btnCancel()
+        }
+      })
+    },
+    // 取消业务
+    btnCancel() {
+      this.$refs.roleForm.resetFields() // 重置表单数据
+      this.showDialog = false // 关闭弹层
     }
   }
 }
