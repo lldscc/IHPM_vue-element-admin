@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { getDepartment } from '@/api/department'
+import { getDepartment, delDepartment } from '@/api/department'
 import { transListToTree } from '@/utils'
 import AppDept from './components/add-dept.vue'
 export default {
@@ -71,7 +71,6 @@ export default {
       this.dapts = transListToTree(result, 0) // 将部门列表转换为树形结构
     },
     // 下拉菜单点击事件
-
     operateDept(type, id) {
       if (type === 'add') {
         // 添加业务
@@ -88,6 +87,13 @@ export default {
         this.$nextTick(() => {
         // 要在父组件获取数据，父组件调用子组件的方法获取数据ref
           this.$refs.addDept.getDepartmentDetail() // this.$refs.addDept相当于子组件的this
+        })
+      } else {
+        // 删除业务
+        this.$confirm(' 您确定要删除该部门吗？').then(async() => {
+          await delDepartment(id)
+          this.$message.success('删除成功')
+          this.getDepartment()
         })
       }
     }

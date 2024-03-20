@@ -38,3 +38,10 @@ export function updateDepartment(data) {
     data
   })
 }
+// 6.删除部门的请求接口模块
+export function delDepartment(id) {
+  return request({
+    method: 'delete',
+    url: `/company/department/${id}`
+  })
+}
