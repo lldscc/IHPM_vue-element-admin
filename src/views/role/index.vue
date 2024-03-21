@@ -7,7 +7,6 @@
       </div>
       <!-- table 组件 -->
       <el-table :data="rolelist">
-
         <el-table-column label="序号" width="200" highlight-current-row="true" align="center" prop="id" />
         <el-table-column label="角色" width="200" align="center" prop="name" />
         <el-table-column label="启用" width="200" align="center" prop="state">
