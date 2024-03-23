@@ -7,6 +7,7 @@
       </div>
       <!-- table 组件 -->
       <el-table :data="rolelist">
+
         <el-table-column label="序号" width="200" highlight-current-row="true" align="center" prop="id">
           <!-- 自定义插槽 -->
           <template v-slot="{ row }">
@@ -15,21 +16,40 @@
             <span v-else>{{ row.name }}</span>
           </template>
         </el-table-column>
+
         <el-table-column label="角色" width="200" align="center" prop="name" />
+
         <el-table-column label="启用" width="200" align="center" prop="state">
-          <!-- 自定义结构 {{ ？？？ }} -->
+          <!-- 自定义结构 {{ ？？？ }}  启用列-->
           <template v-slot="{ row }">
-            <span>  {{ row.state === 1 ? "已启用" : row.state === 0 ? "未启用" : "无" }} </span>
+            <!-- 条件判断 是否显示行内编辑 -->
+            <el-switch v-if="row.isEdit" />
+            <span v-else>  {{ row.state === 1 ? "已启用" : row.state === 0 ? "未启用" : "无" }} </span>
           </template>
         </el-table-column>
-        <el-table-column label="描述" align="center" prop="description" />
+
+        <el-table-column label="描述" align="center" prop="description">
+          <!-- 自定义插槽 -->
+          <template v-slot="{ row }">
+            <!-- 条件判断 是否显示行内编辑-->
+            <el-input v-if="row.isEdit" type="textrea" />
+            <span v-else>{{ row.description }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center">
           <!-- 放置操作按钮 -->
           <!-- ？？？ template中使用 v-slot解构其中的数据 -->
           <template v-slot="{ row }">
-            <el-button size="mini" type="text">分配权限</el-button>
-            <el-button size="mini" type="text" @click="btnEditRow(row)">编辑</el-button>
-            <el-button size="mini" type="text">删除</el-button>
+            <!-- 条件渲染：点击编辑，三个按钮变成确认与取消按钮 -->
+            <template v-if="row.isEdit">
+              <el-button size="mini" type="primary">确认</el-button>
+              <el-button size="mini" type="text">取消</el-button>
+            </template>
+            <template v-else>
+              <el-button size="mini" type="text">分配权限</el-button>
+              <el-button size="mini" type="text" @click="btnEditRow(row)">编辑</el-button>
+              <el-button size="mini" type="text">删除</el-button>
+            </template>
           </template>
         </el-table-column>
 
