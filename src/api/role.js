@@ -15,11 +15,19 @@ export function addRole(data) {
     data
   })
 }
-// 3.根据ID更新角色的请求接口模块
+// 3.更新角色的请求接口模块
 export function updateRole(data) {
   return request({
     url: `/sys/role/${data.id}`,
     method: 'put',
     data
+  })
+}
+
+// 4.根据ID删除角色的请求接口模块
+export function delRole(id) {
+  return request({
+    url: `/sys/role/${id}`,
+    method: 'delete'
   })
 }

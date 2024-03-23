@@ -48,7 +48,14 @@
             <template v-else>
               <el-button size="mini" type="text">分配权限</el-button>
               <el-button size="mini" type="text" @click="btnEditRow(row)">编辑</el-button>
-              <el-button size="mini" type="text">删除</el-button>
+              <!-- Popconfirm 气泡确认框 -->
+              <el-popconfirm
+                title="这是一段内容确定删除吗？"
+                @onConfirm="deleteRow(row.id)"
+              >
+                <el-button slot="reference" size="mini" type="text" style="margin-left: 10px;">删除</el-button>
+              </el-popconfirm>
+
             </template>
           </template>
         </el-table-column>
@@ -97,7 +104,7 @@
 </template>
 <script>
 // 获取请求方法
-import { getRoleList, addRole, updateRole } from '@/api/role'
+import { getRoleList, addRole, updateRole, delRole } from '@/api/role'
 export default {
   name: 'Role',
   data() {
@@ -200,6 +207,16 @@ export default {
       } else {
         this.$message.error('请填写完整信息')
       }
+    },
+    // 删除业务
+    async deleteRow(id) {
+      // console.log(id)
+      await delRole(id)
+      this.$message.success('删除成功')
+      // 删除成功后，重新获取数据
+      // 如果是最后一页的最后一条数据，删除后，页码数减1
+      if (this.rolelist.length === 1) this.pageParams.page--
+      this.getRoleList()
     }
   }
 }
