@@ -12,7 +12,7 @@
           <!-- 自定义插槽 -->
           <template v-slot="{ row }">
             <!-- 条件判断 是否显示行内编辑-->
-            <el-input v-if="row.isEdit" size="mini" />
+            <el-input v-if="row.isEdit" v-model="row.editRow.name" size="mini" />
             <span v-else>{{ row.name }}</span>
           </template>
         </el-table-column>
@@ -23,7 +23,7 @@
           <!-- 自定义结构 {{ ？？？ }}  启用列-->
           <template v-slot="{ row }">
             <!-- 条件判断 是否显示行内编辑 -->
-            <el-switch v-if="row.isEdit" />
+            <el-switch v-if="row.isEdit" v-model="row.editRow.state" :active-value="1" :inactive-value="0" />
             <span v-else>  {{ row.state === 1 ? "已启用" : row.state === 0 ? "未启用" : "无" }} </span>
           </template>
         </el-table-column>
@@ -32,7 +32,7 @@
           <!-- 自定义插槽 -->
           <template v-slot="{ row }">
             <!-- 条件判断 是否显示行内编辑-->
-            <el-input v-if="row.isEdit" type="textrea" />
+            <el-input v-if="row.isEdit" v-model="row.editRow.description" type="textrea" />
             <span v-else>{{ row.description }}</span>
           </template>
         </el-table-column>
@@ -142,6 +142,12 @@ export default {
         // 有数据响应式的问题 添加的动态属性 不具备响应式特点
         // 使用this.$set(目标对象，属性名称，初始值) 可以针对目标对象添加对象 响应式
         this.$set(item, 'isEdit', false)
+        // 数据缓存
+        this.$set(item, 'editRow', {
+          name: item.name,
+          description: item.description,
+          state: item.state
+        })
       })
     },
     // 分页的功能
@@ -169,7 +175,12 @@ export default {
     },
     // 编辑业务
     btnEditRow(row) {
-      row.isEdit = true // 改变行的编辑状态
+      // 改变行的编辑状态
+      row.isEdit = true
+      // 编辑时，将当前行的数据缓存
+      row.editRow.name = row.name
+      row.editRow.description = row.description
+      row.editRow.state = row.state
     }
   }
 }
