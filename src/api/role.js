@@ -15,3 +15,11 @@ export function addRole(data) {
     data
   })
 }
+// 3.根据ID更新角色的请求接口模块
+export function updateRole(data) {
+  return request({
+    url: `/sys/role/${data.id}`,
+    method: 'put',
+    data
+  })
+}

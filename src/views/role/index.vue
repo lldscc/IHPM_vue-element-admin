@@ -38,12 +38,12 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <!-- 放置操作按钮 -->
-          <!-- ？？？ template中使用 v-slot解构其中的数据 -->
+          <!-- template中使用 v-slot解构其中的数据 -->
           <template v-slot="{ row }">
             <!-- 条件渲染：点击编辑，三个按钮变成确认与取消按钮 -->
             <template v-if="row.isEdit">
-              <el-button size="mini" type="primary">确认</el-button>
-              <el-button size="mini" type="text">取消</el-button>
+              <el-button size="mini" type="primary" @click="btnEditOK(row)">确认</el-button>
+              <el-button size="mini" type="text" @click="row.isEdit = false">取消</el-button>
             </template>
             <template v-else>
               <el-button size="mini" type="text">分配权限</el-button>
@@ -97,7 +97,7 @@
 </template>
 <script>
 // 获取请求方法
-import { getRoleList, addRole } from '@/api/role'
+import { getRoleList, addRole, updateRole } from '@/api/role'
 export default {
   name: 'Role',
   data() {
@@ -156,7 +156,7 @@ export default {
       this.getRoleList()
     },
 
-    // 确认业务
+    // 添加角色弹窗-确认业务
     btnOK() {
       this.$refs.roleForm.validate(async isOK => {
         if (isOK) {
@@ -168,7 +168,7 @@ export default {
         }
       })
     },
-    // 取消业务
+    // 添加角色弹窗-取消业务
     btnCancel() {
       this.$refs.roleForm.resetFields() // 重置表单数据
       this.showDialog = false // 关闭弹层
@@ -181,6 +181,25 @@ export default {
       row.editRow.name = row.name
       row.editRow.description = row.description
       row.editRow.state = row.state
+    },
+    // 编辑-确认业务
+    async btnEditOK(row) {
+      if (row.editRow.name && row.editRow.description) {
+        // 缓存的数据是最新的数据
+        await updateRole({ ...row.editRow, id: row.id }) // ...延展运算符：将对象中的属性展开
+        // 更新成功
+        this.$message.success('更新角色成功')
+        // 更新显示的数据
+        // row.name = row.editRow.name // 误判
+        // ？？？
+        // Object.assign(target, source)
+        Object.assign(row, {
+          ...row.editRow,
+          isEdit: false // 退出编辑模式
+        }) // 规避eslint的误判
+      } else {
+        this.$message.error('请填写完整信息')
+      }
     }
   }
 }
