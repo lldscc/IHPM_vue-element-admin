@@ -7,7 +7,14 @@
       </div>
       <!-- table 组件 -->
       <el-table :data="rolelist">
-        <el-table-column label="序号" width="200" highlight-current-row="true" align="center" prop="id" />
+        <el-table-column label="序号" width="200" highlight-current-row="true" align="center" prop="id">
+          <!-- 自定义插槽 -->
+          <template v-slot="{ row }">
+            <!-- 条件判断 是否显示行内编辑-->
+            <el-input v-if="row.isEdit" size="mini" />
+            <span v-else>{{ row.name }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="角色" width="200" align="center" prop="name" />
         <el-table-column label="启用" width="200" align="center" prop="state">
           <!-- 自定义结构 {{ ？？？ }} -->
@@ -18,9 +25,10 @@
         <el-table-column label="描述" align="center" prop="description" />
         <el-table-column label="操作" align="center">
           <!-- 放置操作按钮 -->
-          <template>
+          <!-- ？？？ template中使用 v-slot解构其中的数据 -->
+          <template v-slot="{ row }">
             <el-button size="mini" type="text">分配权限</el-button>
-            <el-button size="mini" type="text">编辑</el-button>
+            <el-button size="mini" type="text" @click="btnEditRow(row)">编辑</el-button>
             <el-button size="mini" type="text">删除</el-button>
           </template>
         </el-table-column>
@@ -108,6 +116,13 @@ export default {
       this.rolelist = rows // 每条赋值给表格数据
       // 总数据赋值给分页数据
       this.pageParams.total = total
+      // 针对每一行数据添加一个编辑标记,(行内编辑功能)
+      this.rolelist.forEach(item => {
+        // item.isEdit = false // 添加一个属性，用来标记是否处于编辑状态
+        // 有数据响应式的问题 添加的动态属性 不具备响应式特点
+        // 使用this.$set(目标对象，属性名称，初始值) 可以针对目标对象添加对象 响应式
+        this.$set(item, 'isEdit', false)
+      })
     },
     // 分页的功能
     changePage(page) {
@@ -131,6 +146,10 @@ export default {
     btnCancel() {
       this.$refs.roleForm.resetFields() // 重置表单数据
       this.showDialog = false // 关闭弹层
+    },
+    // 编辑业务
+    btnEditRow(row) {
+      row.isEdit = true // 改变行的编辑状态
     }
   }
 }
