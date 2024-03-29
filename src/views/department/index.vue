@@ -43,7 +43,7 @@
 
 <script>
 import { getDepartment, delDepartment } from '@/api/department'
-import { transListToTree } from '@/utils'
+import { transListToTreeData } from '@/utils'
 import AppDept from './components/add-dept.vue'
 export default {
   name: 'Department',
@@ -56,8 +56,8 @@ export default {
       dapts: [],
       currentNodeId: null, // 存储当前点击的节点id
       defaultProps: {
-        children: 'children', // 子节点字段
-        label: 'name' // 显示的字段
+        label: 'name', // 显示的字段
+        children: 'children' // 子节点字段
       }
     }
   },
@@ -68,7 +68,7 @@ export default {
     // 获取部门列表
     async getDepartment() {
       const result = await getDepartment() // 获取部门列表的请求
-      this.dapts = transListToTree(result, 0) // 将部门列表转换为树形结构
+      this.dapts = transListToTreeData(result, 0) // 将部门列表转换为树形结构
     },
     // 下拉菜单点击事件
     operateDept(type, id) {
