@@ -62,6 +62,14 @@
         </el-table>
 
         <!-- 3.分页 -->
+        <el-row style="height: 60px" align="middle" type="flex" justify="end">
+          <el-pagination
+            layout="total,prev, pager, next"
+            :total="1000"
+            :page-size="pagesize"
+            :current-page="page"
+          />
+        </el-row>
       </div>
     </div>
   </div>
@@ -84,8 +92,15 @@ export default {
       // 存储响应的数据
       queryParams: {
         // 1.节点Id
-        departmentId: null
-      }
+        departmentId: null,
+
+        // 分页相关
+        // 2.当前页码
+        page: 1,
+        // 3.每页显示条数
+        pagesize: 10
+      },
+      total: 0 // 总条数
     }
   },
   created() {
