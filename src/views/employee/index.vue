@@ -4,12 +4,15 @@
       <!-- 一、页面左侧部分 -->
       <div class="left">
         <!-- 1.搜索栏 -->
+        <!-- input事件是只要内容发生变化就会触发 -->
         <el-input
+          v-model="queryParams.keyword"
           style="margin-bottom: 10px;"
           type="text"
           prefix-icon="el-icon-search"
           size="small"
           placeholder="输入员工姓名搜索"
+          @input="changeValue"
         />
         <!-- 2.树形控件 -->
         <!-- 通过ref属性获取组件实例 -->
@@ -99,7 +102,11 @@ export default {
         // 2.当前页码
         page: 1,
         // 3.每页显示条数
-        pagesize: 10
+        pagesize: 10,
+
+        // 搜索相关
+        // 4.模糊搜索的字段
+        keyword: ''
       },
       total: 0 // 总条数
     }
@@ -144,6 +151,15 @@ export default {
       console.log(newPage)
       this.queryParams.page = newPage // 赋值新页码
       this.getEmployeeeList() // 查询数据
+    },
+    // 搜索框输入事件 input事件:只要内容发生变化就会触发
+    changeValue() {
+      // console.log(this.queryParams.keyword)
+      clearTimeout(this.timer) // 清理上一次的定时器
+      this.timer = setTimeout(() => {
+        this.queryParams.page = 1
+        this.getEmployeeList()
+      }, 300)
     }
   }
 }
