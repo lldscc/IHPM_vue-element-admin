@@ -33,7 +33,34 @@
           <el-button size="mini">excel导入</el-button>
           <el-button size="mini">excel导出</el-button>
         </el-row>
-        <!-- 2.表格组件 -->
+        <!-- 2.表格组件 员工列表 -->
+        <el-table :data="list">
+          <el-table-column label="头像" align="center" prop="staffPhoto">
+            <template v-slot="{ row }">
+              <el-avatar v-if="row.staffPhoto" :src="row.staffPhoto" :size="30" />
+              <span v-else class="username">{{ row.username?.charAt(0) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="姓名" prop="username" />
+          <el-table-column label="手机号" sortable prop="mobile" />
+          <el-table-column label="工号" sortable prop="workNumber" />
+          <el-table-column label="聘用形式" prop="formOfEmployment">
+            <template v-slot="{ row }">
+              {{ row.formOfEmployment === 1 ? '正式' : '临时' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="部门" prop="departmentName" />
+          <el-table-column label="入职时间" sortable prop="timeOfEntry" />
+          <el-table-column label="操作">
+            <template>
+              <el-button size="mini" type="text">查看</el-button>
+              <el-button size="mini" type="text">角色</el-button>
+              <el-button size="mini" type="text">删除</el-button>
+            </template>
+          </el-table-column>
+
+        </el-table>
+
         <!-- 3.分页 -->
       </div>
     </div>
@@ -43,11 +70,13 @@
 
 import { getDepartment } from '@/api/department'
 import { transListToTreeData } from '@/utils/index.js'
+import { getEmployeeeList } from '@/api/employee'
 export default {
   name: 'Employee',
   data() {
     return {
       depts: [], // 左边树形结构的数据
+      list: [], // 员工列表数据
       defaultProps: {
         label: 'name', // 显示的字段
         children: 'children' // 子节点字段
@@ -63,6 +92,7 @@ export default {
     this.getDepartment()
   },
   methods: {
+    // 获取部门列表
     async getDepartment() {
       // this.depts = await getDepartment()
       // 递归方法处理数据：将列表数据转换为树形结构
@@ -75,10 +105,20 @@ export default {
         // 通过el-tree组件的setCurrentKey 设置选中状态
         this.$refs.deptTree.setCurrentKey(this.queryParams.departmentId)
       })
+      // 初始的时候 获取员工列表
+      this.getEmployeeeList()
     },
     selectNode(node) {
-      // console.log(node.id)
+      // 记录点击的节点id 传给数据 设置选中状态
       this.queryParams.departmentId = node.id
+      // 点击切换id后：重新获取员工列表
+      this.getEmployeeeList()
+    },
+    // 获取员工列表
+    async getEmployeeeList() {
+      // 通过部门id获取员工列表 传入参数：部门id queryParams
+      const { rows } = await getEmployeeeList(this.queryParams)
+      this.list = rows
     }
   }
 }
