@@ -65,9 +65,10 @@
         <el-row style="height: 60px" align="middle" type="flex" justify="end">
           <el-pagination
             layout="total,prev, pager, next"
-            :total="1000"
-            :page-size="pagesize"
-            :current-page="page"
+            :total="total"
+            :page-size="queryParams.pagesize"
+            :current-page="queryParams.page"
+            @current-change="changePage"
           />
         </el-row>
       </div>
@@ -126,14 +127,23 @@ export default {
     selectNode(node) {
       // 记录点击的节点id 传给数据 设置选中状态
       this.queryParams.departmentId = node.id
+      // 点击切换部门后：重置页码
+      this.queryParams.page = 1
       // 点击切换id后：重新获取员工列表
       this.getEmployeeeList()
     },
     // 获取员工列表
     async getEmployeeeList() {
       // 通过部门id获取员工列表 传入参数：部门id queryParams
-      const { rows } = await getEmployeeeList(this.queryParams)
+      const { rows, total } = await getEmployeeeList(this.queryParams)
       this.list = rows
+      this.total = total
+    },
+    changePage(newPage) {
+      // 获取新页码
+      console.log(newPage)
+      this.queryParams.page = newPage // 赋值新页码
+      this.getEmployeeeList() // 查询数据
     }
   }
 }
