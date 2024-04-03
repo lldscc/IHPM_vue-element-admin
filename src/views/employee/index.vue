@@ -33,8 +33,8 @@
         <!-- 1.操作栏 -->
         <el-row class="opeate-tools" type="flex" justify="end">
           <el-button size="mini" type="primary">添加员工</el-button>
-          <el-button size="mini">excel导入</el-button>
-          <el-button size="mini">excel导出</el-button>
+          <el-button size="mini" @click="showExcelDialog = true">excel导入</el-button>
+          <el-button size="mini" @click="exportEmployee">excel导出</el-button>
         </el-row>
         <!-- 2.表格组件 员工列表 -->
         <el-table :data="list">
@@ -76,6 +76,8 @@
         </el-row>
       </div>
     </div>
+    <!-- ### .sync的作用 -->
+    <importExcel :show-excel-dialog.sync="showExcelDialog" />
   </div>
 </template>
 <script>
@@ -83,8 +85,13 @@
 import { getDepartment } from '@/api/department'
 import { transListToTreeData } from '@/utils/index.js'
 import { getEmployeeeList } from '@/api/employee'
+import importExcel from './components/import-excel.vue'
+// import FileSaver from 'file-saver'
 export default {
   name: 'Employee',
+  components: {
+    importExcel
+  },
   data() {
     return {
       depts: [], // 左边树形结构的数据
@@ -108,7 +115,8 @@ export default {
         // 4.模糊搜索的字段
         keyword: ''
       },
-      total: 0 // 总条数
+      total: 0, // 总条数
+      showExcelDialog: false // 导出弹层
     }
   },
   created() {
@@ -160,7 +168,15 @@ export default {
         this.queryParams.page = 1
         this.getEmployeeList()
       }, 300)
+    },
+    // 导出员工
+    exportEmployee() {
+      // const result = exportEmployee()
+      // console.log(result)
+      console.log('export')
+      // FileSaver.saveAs(result, '员工列表.xlsx')
     }
+
   }
 }
 </script>

@@ -9,7 +9,6 @@ import roleRouter from './modeules/role' // 引入角色
 import salaryRouter from './modeules/salary' // 引入工资
 import socialRouter from './modeules/social' // 引入社保
 Vue.use(Router)
-
 /* Layout */
 import Layout from '@/layout'
 export const constantRoutes = [

@@ -25,6 +25,9 @@ service.interceptors.request.use(
 // 三、响应拦截器
 service.interceptors.response.use((response) => {
   // 对响应数据做点什么
+  // 判断是不是Blob
+  if (response.data instanceof Blob) return response.data
+
   const { data, message, success } = response.data
   if (success) {
     return data
@@ -45,4 +48,5 @@ service.interceptors.response.use((response) => {
   // 对响应错误做点什么
   Message({ type: 'error', message: error.message })
 })
+
 export default service
