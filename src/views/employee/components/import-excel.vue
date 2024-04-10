@@ -12,12 +12,13 @@
           class="excel-upload-input"
           type="file"
           accept=".xlsx, .xls"
+          @change="uploadChang"
         >
         <div class="drop">
           <i class="el-icon-upload" />
           <el-button type="text" @click="getTemplate">下载导入模板</el-button>
           <span>将文件拖到此处或
-            <el-button type="text">点击上传</el-button>
+            <el-button type="text" @click="handleUpload">点击上传</el-button>
           </span>
         </div>
       </div>
@@ -43,6 +44,13 @@ export default {
       console.log('员工导入模版.xlsx')
       // const data = await getExportTemplate()
       // FileSaver.saveAS(data, '员工导入模版.xlsx')
+    },
+    // 上传excel文件
+    handleUpload() {
+      this.$refs['excel-upload-input'].click()
+    },
+    uploadChang(event) {
+      console.log(event.targat.files)
     }
 
   }

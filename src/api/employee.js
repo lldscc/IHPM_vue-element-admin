@@ -28,3 +28,13 @@ export function getExportTemplate() {
     responseType: 'blob' // 二进制文件流
   })
 }
+/**
+ * 上传用户的excel
+ *  **/
+export function uploadExcel(data) {
+  return request({
+    url: '/sys/user/import',
+    method: 'post',
+    data
+  })
+}
