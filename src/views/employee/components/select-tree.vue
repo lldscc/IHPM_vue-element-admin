@@ -5,6 +5,7 @@
     :options="treeData"
     :props="props"
     separator="-"
+    @change="changeValue"
   />
 </template>
 <script>
@@ -15,8 +16,8 @@ export default {
     return {
       treeData: [], // 赋值给 级联组件的options
       props: {
-        label: 'name', // 要展示的字段
-        value: 'id' // 要存储的字段
+        type: Number,
+        default: null
       }
     }
   },
@@ -26,6 +27,13 @@ export default {
   methods: {
     async getDepartment() {
       this.treeData = transListToTreeData(await getDepartment(), 0) // 将组织架构的数据 转化树形赋值给treeData
+    },
+    changeValue(list) {
+      if (list.length > 0) {
+        this.$emit('input', list[list.length - 1]) // 选中的最后一个节点
+      } else {
+        this.$emit('input', null) // 如何长度为0,值为空,未选中
+      }
     }
   }
 }
