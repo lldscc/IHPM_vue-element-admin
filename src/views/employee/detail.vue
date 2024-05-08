@@ -84,7 +84,7 @@
           <!-- 保存个人信息 -->
           <el-row type="flex">
             <el-col :span="12" style="margin-left:220px">
-              <el-button size="mini" type="primary">保存更新</el-button>
+              <el-button size="mini" type="primary" @click="saveData">保存更新</el-button>
             </el-col>
           </el-row>
         </el-form>
@@ -94,6 +94,7 @@
   </div>
 </template>
 <script>
+import { addEmployee } from '@/api/employee'
 import selectTree from './components/select-tree.vue'
 
 export default {
@@ -138,8 +139,15 @@ export default {
     }
   },
   methods: {
+    // 新增员工
     saveData() {
-      this.$refs.userForm.validate()
+      this.$refs.userForm.validate(async isOK => {
+        if (isOK) {
+          await addEmployee(this.userInfo)
+          this.$message.success('新增员工成功！')
+          this.$router.push('/employee')
+        }
+      })
     }
   }
 }

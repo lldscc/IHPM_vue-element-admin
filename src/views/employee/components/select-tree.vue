@@ -1,6 +1,7 @@
 <template>
   <!-- element-ui级联组件 -->
   <el-cascader
+    :value="value"
     size="mini"
     :options="treeData"
     :props="props"
@@ -16,8 +17,11 @@ export default {
     return {
       treeData: [], // 赋值给 级联组件的options
       props: {
-        type: Number,
-        default: null
+        value: {
+          type: Number,
+          default: null
+        },
+        label: 'name'
       }
     }
   },
@@ -27,6 +31,7 @@ export default {
   methods: {
     async getDepartment() {
       this.treeData = transListToTreeData(await getDepartment(), 0) // 将组织架构的数据 转化树形赋值给treeData
+      console.log(this.treeData)
     },
     changeValue(list) {
       if (list.length > 0) {

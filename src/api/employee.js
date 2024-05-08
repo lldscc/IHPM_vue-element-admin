@@ -7,11 +7,9 @@ export function getEmployeeeList(params) {
     params
   })
 }
-
 /**
  * 导出员工excel表格的请求
  *  **/
-
 export function exportEmployee() {
   return request({
     url: '/sys/user/export',
@@ -45,5 +43,15 @@ export function delEmployee(id) {
   return request({
     method: 'delete',
     url: '/sys/user/${id}'
+  })
+}
+/**
+ * 新增员工
+ *  **/
+export function addEmployee(data) {
+  return request({
+    method: 'post',
+    url: '/sys/user',
+    data
   })
 }
