@@ -8,8 +8,8 @@
         <el-table-column label="描述" prop="description" />
         <el-table-column label="操作">
           <template v-slot="{ row }">
-            <el-button v-if="row.type === 1" size="mini" type="text">添加</el-button>
-            <el-button size="mini" type="text">编辑</el-button>
+            <el-button v-if="row.type === 1" size="mini" type="text" @click="addPermission(0, 2)">添加</el-button>
+            <el-button size="mini" type="text" @click="editPermission(row.id)">编辑</el-button>
             <el-button size="mini" type="text">删除</el-button>
           </template>
         </el-table-column>
@@ -46,8 +46,8 @@
   </div>
 </template>
 <script>
-import { getPermissionList } from '@/api/permission'
-import { transListToTreeData, updatePermission, addPermission } from '@/utils'
+import { getPermissionList, addPermission, updatePermission, getPermissionDetail } from '@/api/permission'
+import { transListToTreeData } from '@/utils'
 export default {
   name: 'Permission',
   data() {
@@ -76,7 +76,7 @@ export default {
     }
   },
   created() {
-    getPermissionList()
+    this.getPermissionList()
     console.log(this.list)
   },
   methods: {
@@ -89,6 +89,12 @@ export default {
     addPermission(pid, type) {
       this.formData.pid = pid
       this.formData.type = type
+      this.showDialog = true
+    },
+    // 编辑
+    async editPermission(id) {
+      // 根据获取id获取详情
+      this.formData = await getPermissionDetail(id)
       this.showDialog = true
     },
     // 弹窗
