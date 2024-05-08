@@ -10,7 +10,7 @@
           <template v-slot="{ row }">
             <el-button v-if="row.type === 1" size="mini" type="text" @click="addPermission(0, 2)">添加</el-button>
             <el-button size="mini" type="text" @click="editPermission(row.id)">编辑</el-button>
-            <el-button size="mini" type="text">删除</el-button>
+            <el-button size="mini" type="text" @click="delPermission(row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -46,7 +46,7 @@
   </div>
 </template>
 <script>
-import { getPermissionList, addPermission, updatePermission, getPermissionDetail } from '@/api/permission'
+import { getPermissionList, addPermission, updatePermission, getPermissionDetail, delPermission } from '@/api/permission'
 import { transListToTreeData } from '@/utils'
 export default {
   name: 'Permission',
@@ -96,6 +96,17 @@ export default {
       // 根据获取id获取详情
       this.formData = await getPermissionDetail(id)
       this.showDialog = true
+    },
+    // 删除操作
+    async delPermission(id) {
+      try {
+        await this.$confirm('确定要删除该数据吗')
+        await delPermission(id)
+        this.getPermissionList()
+        this.$message.success('删除成功')
+      } catch (error) {
+        console.log(error)
+      }
     },
     // 弹窗
     btnOK() {
