@@ -1,7 +1,7 @@
 // 导入封装好的缓存方法
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { login, getUserInfo } from '@/api/user'
-import { constantRoutes } from '@/router'
+import { constantRoutes, resetRouter } from '@/router'
 
 /** *
  * VueX state
@@ -64,6 +64,8 @@ const actions = {
     context.commit('removeToken') // 提交到mutations
     // 清除用户信息
     context.commit('setUserInfo', {}) // 提交到mutations
+    // 重置路由
+    resetRouter()
   }
 }
 
