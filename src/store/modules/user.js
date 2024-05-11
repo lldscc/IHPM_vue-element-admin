@@ -1,15 +1,21 @@
 // 导入封装好的缓存方法
 import { getToken, setToken, removeToken } from '@/utils/auth'
-
 import { login, getUserInfo } from '@/api/user'
+import { constantRoutes } from '@/router'
 
-// VueX state
+/** *
+ * VueX state
+ *  */
 const state = {
   token: getToken(), // 从缓存中读取初始值
-  userInfo: {} // 存储用户信息
+  userInfo: {}, // 存储用户信息
+  routes: constantRoutes // 路由规则 默认静态路由数组
+
 }
 
-// VueX  mutations修改数据
+/** *
+ * VueX  mutations修改数据
+ *  */
 const mutations = {
   setToken(state, token) {
     state.token = token
@@ -24,9 +30,16 @@ const mutations = {
   // 设置用户信息
   setUserInfo(state, userInfo) {
     state.userInfo = userInfo
+  },
+  //  路由规则：静态+动态
+  setRoutes(state, newRoutes) {
+    state.routes = [...constantRoutes, ...newRoutes]
   }
 }
-// VueX actions
+
+/** *
+ * VueX actions
+ *  */
 const actions = {
   // context上下文,参数(手机号，密码)
   async login(context, data) {

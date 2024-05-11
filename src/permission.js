@@ -37,8 +37,9 @@ router.beforeEach(async(to, from, next) => {
         const filterRoutes = asyncRouter.filter(item => {
           return roles.menus.includes(item.name)
         })
+        store.commit('user/setRoutes', filterRoutes) // 提交到vuex
         router.addRoutes([...filterRoutes, { path: '*', redirect: '/404', hidden: true }])
-        next(to.path)
+        next(to.path) // 转发 addRoutes bug
       } else {
         next()
       }
