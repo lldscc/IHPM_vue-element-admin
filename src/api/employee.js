@@ -74,7 +74,7 @@ export function getEnableRoleList() {
   })
 }
 /**
- * 分配员工角色
+ * 分配员工角色接口
  * ***/
 
 export function assignRole(data) {

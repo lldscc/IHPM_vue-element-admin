@@ -80,26 +80,32 @@
     </div>
     <!-- ### .sync的作用 -->
     <importExcel :show-excel-dialog.sync="showExcelDialog" />
-    <!-- 角色弹层 -->
+
+    <!-- 员工所属角色弹层 -->
     <el-dialog :visible.sync="showRoleDialog" title="分配角色">
-      <!-- 弹层内容 -->
-      <!-- checkbox -->
       <el-checkbox-group v-model="roleIds">
-        <!-- 放置n个的checkbox  要执行checkbox的存储值 item.id-->
         <el-checkbox
           v-for="item in roleList"
           :key="item.id"
           :label="item.id"
         >{{ item.name }}</el-checkbox>
       </el-checkbox-group>
+      <!-- 确认取消 -->
+      <el-row slot="footer" type="flex" justify="center">
+        <el-col :span="6">
+          <el-button type="primary" @click="btnRoleOK">确认</el-button>
+          <el-button @click="showRoleDialog=false">取消</el-button>
+        </el-col>
+      </el-row>
     </el-dialog>
+
   </div>
 </template>
 <script>
 
 import { getDepartment } from '@/api/department'
 import { transListToTreeData } from '@/utils/index.js'
-import { delEmployee, getEmployeeeList, getEnableRoleList, getEmployeeDetail } from '@/api/employee'
+import { delEmployee, getEmployeeeList, getEnableRoleList, getEmployeeDetail, assignRole } from '@/api/employee'
 import importExcel from './components/import-excel.vue'
 // import FileSaver from 'file-saver'
 export default {
@@ -205,16 +211,25 @@ export default {
       this.$message.success('删除员工成功')
     },
     /**
-     *  分配角色
+     *  员工 角色相关
      */
+    // 1.回显角色数据
     async btnRole(id) {
-      this.showRoleDialog = true
       // 角色列表
       this.roleList = await getEnableRoleList()
       this.currentUserId = id
       const { roleIds } = await getEmployeeDetail(id)
       this.roleIds = roleIds
       this.showRoleDialog = true
+    },
+    // 2.分配角色
+    async btnRoleOK() {
+      await assignRole({
+        id: this.currentUserId,
+        roleIds: this.roleIds
+      })
+      this.$message.success('分配用户角色成功')
+      this.showRoleDialog = false
     }
 
   }
