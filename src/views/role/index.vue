@@ -46,7 +46,7 @@
               <el-button size="mini" type="text" @click="row.isEdit = false">取消</el-button>
             </template>
             <template v-else>
-              <el-button size="mini" type="text">分配权限</el-button>
+              <el-button size="mini" type="text" @click="btnPermission">分配权限</el-button>
               <el-button size="mini" type="text" @click="btnEditRow(row)">编辑</el-button>
               <!-- Popconfirm 气泡确认框 -->
               <el-popconfirm
@@ -76,7 +76,7 @@
       </el-row>
     </div>
 
-    <!-- 弹层组件Dialog 表单from-->
+    <!-- 添加角色-弹层组件Dialog 表单from-->
     <!-- ???::visible.sync="showDialog" @close="btnCancel" -->
     <el-dialog title="新增角色" width="500px" :visible.sync="showDialog" @close="btnCancel">
       <!-- 绑定数据校验 -->
@@ -100,11 +100,23 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <!-- 权限弹层 -->
+    <el-dialog :visible.sync="showPermissionDialog" title="分配权限">
+      <el-tree
+        :data="permissionData"
+        :props="{ label: 'name' }"
+        show-checkbox
+        default-expand-all
+      />
+    </el-dialog>
   </div>
 </template>
 <script>
 // 获取请求方法
 import { getRoleList, addRole, updateRole, delRole } from '@/api/role'
+import { getPermissionList } from '@/api/permission'
+import { transListToTreeData } from '@/utils/index'
 export default {
   name: 'Role',
   data() {
@@ -118,18 +130,28 @@ export default {
       },
       showDialog: false, // 控制弹层显示隐藏
 
-      // 新增弹窗表单的数据
+      /**
+       * 2.新增角色
+       * **/
+      // 新增角色弹窗表单的数据
       roleForm: {
         name: '',
         description: '',
         state: 0 // 默认启用 关闭 0 ； 打开1
       },
-      // 新增的表单规则
+      // 新增角色的表单规则
       rules: {
         name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
         description: [{ required: true, message: '请输入角色描述', trigger: 'blur' }]
+      },
 
-      }
+      /**
+       * 3.分配权限
+       * **/
+      // 弹层
+      showPermissionDialog: false,
+      // 角色权限数据
+      permissionData: []
 
     }
   },
@@ -217,6 +239,15 @@ export default {
       // 如果是最后一页的最后一条数据，删除后，页码数减1
       if (this.rolelist.length === 1) this.pageParams.page--
       this.getRoleList()
+    },
+    /**
+     * 分配权限
+     */
+    async btnPermission() {
+      this.showPermissionDialog = true
+      // 获取数据转化成树形
+      this.permissionData = transListToTreeData(await getPermissionList(), 0)
+      // console.log(this.permissionData)
     }
   }
 }
