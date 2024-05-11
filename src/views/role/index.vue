@@ -105,6 +105,7 @@
     <el-dialog :visible.sync="showPermissionDialog" title="分配权限">
       <!-- default-checked-keys的属性是设置当前选中的节点，但是必须配合node-key属性，因为permIds变量中存储的都是id，必须el-tree组件知道key是哪个字段，所以设置node-key="id" -->
       <el-tree
+        ref="permTree"
         node-key="id"
         :data="permissionData"
         :props="{ label: 'name' }"
@@ -112,12 +113,19 @@
         default-expand-all
         :default-checked-keys="permIds"
       />
+      <!-- 更改权限 确认取消 -->
+      <el-row slot="footer" type="flex" justify="center">
+        <el-col :span="6">
+          <el-button type="primary" size="mini" @click="btnPermissionOK">确定</el-button>
+          <el-button size="mini" @click="showPermissionDialog = false">取消</el-button>
+        </el-col>
+      </el-row>
     </el-dialog>
   </div>
 </template>
 <script>
 // 获取请求方法
-import { getRoleList, addRole, updateRole, delRole, getRoleDetail } from '@/api/role'
+import { getRoleList, addRole, updateRole, delRole, getRoleDetail, assignPerm } from '@/api/role'
 import { getPermissionList } from '@/api/permission'
 import { transListToTreeData } from '@/utils/index'
 export default {
@@ -250,15 +258,25 @@ export default {
     /**
      * 分配权限
      */
+    // 1.显示权限数据
     async btnPermission(id) {
       // console.log(this.permissionData)
       this.currentRoleId = id
       const { permIds } = await getRoleDetail(id)
       this.permIds = permIds
-      console.log(this.permIds)
+      // console.log(this.permIds)
       // 获取数据转化成树形
       this.permissionData = transListToTreeData(await getPermissionList(), 0)
       this.showPermissionDialog = true
+    },
+    // 2.更改权限 确认按钮
+    async btnPermissionOK() {
+      await assignPerm({
+        id: this.currentRoleId,
+        permIds: this.$refs.permTree.getCheckedKeys()
+      })
+      this.$message.success('角色分配权限成功')
+      this.showPermissionDialog = false
     }
   }
 }
