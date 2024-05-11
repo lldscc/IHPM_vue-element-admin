@@ -46,7 +46,7 @@
               <el-button size="mini" type="text" @click="row.isEdit = false">取消</el-button>
             </template>
             <template v-else>
-              <el-button size="mini" type="text" @click="btnPermission">分配权限</el-button>
+              <el-button size="mini" type="text" @click="btnPermission(row.id)">分配权限</el-button>
               <el-button size="mini" type="text" @click="btnEditRow(row)">编辑</el-button>
               <!-- Popconfirm 气泡确认框 -->
               <el-popconfirm
@@ -103,18 +103,21 @@
 
     <!-- 权限弹层 -->
     <el-dialog :visible.sync="showPermissionDialog" title="分配权限">
+      <!-- default-checked-keys的属性是设置当前选中的节点，但是必须配合node-key属性，因为permIds变量中存储的都是id，必须el-tree组件知道key是哪个字段，所以设置node-key="id" -->
       <el-tree
+        node-key="id"
         :data="permissionData"
         :props="{ label: 'name' }"
         show-checkbox
         default-expand-all
+        :default-checked-keys="permIds"
       />
     </el-dialog>
   </div>
 </template>
 <script>
 // 获取请求方法
-import { getRoleList, addRole, updateRole, delRole } from '@/api/role'
+import { getRoleList, addRole, updateRole, delRole, getRoleDetail } from '@/api/role'
 import { getPermissionList } from '@/api/permission'
 import { transListToTreeData } from '@/utils/index'
 export default {
@@ -150,8 +153,12 @@ export default {
        * **/
       // 弹层
       showPermissionDialog: false,
-      // 角色权限数据
-      permissionData: []
+      // 所有角色权限数据
+      permissionData: [],
+      // 角色拥有的权限数据
+      permIds: [],
+      // 记录角色id
+      currentRoleId: null
 
     }
   },
@@ -243,11 +250,15 @@ export default {
     /**
      * 分配权限
      */
-    async btnPermission() {
-      this.showPermissionDialog = true
+    async btnPermission(id) {
+      // console.log(this.permissionData)
+      this.currentRoleId = id
+      const { permIds } = await getRoleDetail(id)
+      this.permIds = permIds
+      console.log(this.permIds)
       // 获取数据转化成树形
       this.permissionData = transListToTreeData(await getPermissionList(), 0)
-      // console.log(this.permissionData)
+      this.showPermissionDialog = true
     }
   }
 }
