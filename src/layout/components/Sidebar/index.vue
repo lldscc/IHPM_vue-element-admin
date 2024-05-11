@@ -12,8 +12,8 @@
         :collapse-transition="false"
         mode="vertical"
       >
-      <!-- 遍历路由信息生成sidebar-item组件 -->
-        <sidebar-item  v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
+        <!-- 遍历路由信息生成sidebar-item组件 -->
+        <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
   </div>
@@ -28,14 +28,15 @@ import variables from '@/styles/variables.scss'
 export default {
   components: { SidebarItem, Logo },
   computed: {
+    // 快捷访问
     ...mapGetters([
-      'sidebar'
+      'sidebar', 'routes'
     ]),
-    // 获取路由信息
-    routes() {
-      // 当前路由的所有路由信息
-      return this.$router.options.routes
-    },
+    // 获取路由信息(静态路由)
+    // routes() {
+    //   // 当前路由的所有路由信息
+    //   return this.$router.options.routes
+    // },
     activeMenu() {
       const route = this.$route
       const { meta, path } = route

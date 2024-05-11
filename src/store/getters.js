@@ -4,7 +4,8 @@ const getters = {
   token: state => state.user.token,
   userId: state => state.user.userInfo.userId,
   avatar: state => state.user.userInfo.staffPhoto, // 用户头像
-  name: state => state.user.userInfo.username // 用户名
+  name: state => state.user.userInfo.username, // 用户名
+  routes: state => state.user.routes // 路由规则
 }
 export default getters
 // 对vuex进行了简单的封装，向外暴露，方便在组件中使用
