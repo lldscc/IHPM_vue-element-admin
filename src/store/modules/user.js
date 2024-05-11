@@ -43,6 +43,7 @@ const actions = {
     // console.log('获取用户信息')
     const result = await getUserInfo()
     context.commit('setUserInfo', result) // 提交到mutations,存储用户信息
+    return result
   },
   // 退出登录
   logout(context) {

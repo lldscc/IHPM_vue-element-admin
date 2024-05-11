@@ -4,6 +4,7 @@ export default {
   // 路由信息
   path: '/department',
   component: layout, // 一级路由： 布局组件
+  name: 'department',
   children: [
     {
       path: '', // 二级路由 什么都不写 作为二级路由的默认组件
