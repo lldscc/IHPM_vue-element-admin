@@ -30,17 +30,19 @@ router.beforeEach(async(to, from, next) => {
       // 访问其他页面，有token，放行
       // 通过vuex中userId判断是否有用户信息
       if (!store.getters.userId) {
-        const { roles } = await store.dispatch('user/getUserInfo') // 获取用户信息
+        const { roles } = await store.dispatch('user/getUserInfo') // Vuex获取用户信息
         // console.log(roles.menus) // 用户信息中的路由权限[路由数组]
         // console.log('动态路由', asyncRouter) // 动态路由[路由数组]
         // 筛选路由
         const filterRoutes = asyncRouter.filter(item => {
           return roles.menus.includes(item.name)
         })
-        console.log(filterRoutes)
+        router.addRoutes([...filterRoutes, { path: '*', redirect: '/404', hidden: true }])
+        next(to.path)
+      } else {
+        next()
       }
-      next()
-    }2
+    }
   } else {
     // 没有token
     if (whiteList.indexOf(to.path) !== -1) {
