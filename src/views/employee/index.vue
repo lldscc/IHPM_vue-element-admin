@@ -55,9 +55,9 @@
           <el-table-column label="部门" prop="departmentName" />
           <el-table-column label="入职时间" sortable prop="timeOfEntry" />
           <el-table-column label="操作">
-            <template>
+            <template v-slot="{row}">
               <el-button size="mini" type="text">查看</el-button>
-              <el-button size="mini" type="text" @click="btnRole">角色</el-button>
+              <el-button size="mini" type="text" @click="btnRole(row.id)">角色</el-button>
               <el-popconfirm title="确认删除该行数据吗？" @onConfirm="confirmDel(row.id)">
                 <el-button slot="reference" size="mini" type="text" style="margin-left: 10px;">删除</el-button>
               </el-popconfirm>
@@ -99,7 +99,7 @@
 
 import { getDepartment } from '@/api/department'
 import { transListToTreeData } from '@/utils/index.js'
-import { delEmployee, getEmployeeeList, getEnableRoleList } from '@/api/employee'
+import { delEmployee, getEmployeeeList, getEnableRoleList, getEmployeeDetail } from '@/api/employee'
 import importExcel from './components/import-excel.vue'
 // import FileSaver from 'file-saver'
 export default {
@@ -112,7 +112,7 @@ export default {
       // 角色弹层
       showRoleDialog: false, // 用来控制角色弹层的显示
       roleList: [], // 接收角色列表
-      roleIds: [], // 用来双向绑定数据的
+      roleIds: [], // 角色 用来双向绑定数据的
 
       depts: [], // 左边树形结构的数据
       list: [], // 员工列表数据
@@ -136,7 +136,8 @@ export default {
         keyword: ''
       },
       total: 0, // 总条数
-      showExcelDialog: false // 导出弹层
+      showExcelDialog: false, // 导出弹层
+      currentUserId: null // 用来记录当前点击的用户id
     }
   },
   created() {
@@ -203,10 +204,17 @@ export default {
       this.getEmployeeeList()
       this.$message.success('删除员工成功')
     },
-    // 点击角色按钮弹出层
-    async btnRole() {
+    /**
+     *  分配角色
+     */
+    async btnRole(id) {
       this.showRoleDialog = true
+      // 角色列表
       this.roleList = await getEnableRoleList()
+      this.currentUserId = id
+      const { roleIds } = await getEmployeeDetail(id)
+      this.roleIds = roleIds
+      this.showRoleDialog = true
     }
 
   }
