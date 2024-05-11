@@ -11,6 +11,8 @@ import socialRouter from './modeules/social' // 引入社保
 Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
+
+// 声明静态路由
 export const constantRoutes = [
   {
     path: '/login',
@@ -35,6 +37,13 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
+
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
+]
+
+// 声明动态路由
+export const asyncRouter = [
   departmentRouter, // 组织架构
   roleRouter, // 审批
   employeeRouter, // 员工
@@ -42,16 +51,12 @@ export const constantRoutes = [
   attendanceRouter, // 考勤
   approvalRouter, // 审批
   salaryRouter, // 工资
-  socialRouter, // 社保
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  socialRouter // 社保
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  routes: constantRoutes // 静态路由
 })
 
 const router = createRouter()
