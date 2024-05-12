@@ -112,6 +112,7 @@
         show-checkbox
         default-expand-all
         :default-checked-keys="permIds"
+        :check-strictly="true"
       />
       <!-- 更改权限 确认取消 -->
       <el-row slot="footer" type="flex" justify="center">

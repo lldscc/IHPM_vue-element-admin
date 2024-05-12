@@ -47,7 +47,6 @@ Vue.directive('permission', {
       // 不存在就要删除或者禁用
       el.remove() // 删除元素
       // el.disabled = true
-      // 线上的权限数据和线下的代码进行对应
     }
   }
 

@@ -8,7 +8,7 @@
         <el-table-column label="描述" prop="description" />
         <el-table-column label="操作">
           <template v-slot="{ row }">
-            <el-button v-if="row.type === 1" size="mini" type="text" @click="addPermission(0, 2)">添加</el-button>
+            <el-button v-if="row.type === 1" size="mini" type="text" @click="addPermission(row.id, 2)">添加</el-button>
             <el-button size="mini" type="text" @click="editPermission(row.id)">编辑</el-button>
             <el-button size="mini" type="text" @click="delPermission(row.id)">删除</el-button>
           </template>
