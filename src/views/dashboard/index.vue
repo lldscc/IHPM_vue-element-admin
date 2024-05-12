@@ -112,7 +112,7 @@
                 <span>申报人数</span>
                 <count-to
                   :start-val="0"
-                  :end-val="homeData.socialInsurance.declarationTotal"
+                  :end-val="homeData.socialInsurance?.declarationTotal"
                   :duration="1000"
                 />
               </div>
@@ -121,7 +121,7 @@
                   <span>待申报(人)</span>
                   <count-to
                     :start-val="0"
-                    :end-val="homeData.socialInsurance.toDeclareTotal"
+                    :end-val="homeData.socialInsurance?.toDeclareTotal"
                     :duration="1000"
                   />
                 </div>
@@ -129,7 +129,7 @@
                   <span>申报中(人)</span>
                   <count-to
                     :start-val="0"
-                    :end-val="homeData.socialInsurance.declaringTotal"
+                    :end-val="homeData.socialInsurance?.declaringTotal"
                     :duration="1000"
                   />
                 </div>
@@ -137,7 +137,7 @@
                   <span>已申报(人)</span>
                   <count-to
                     :start-val="0"
-                    :end-val="homeData.socialInsurance.declaredTotal"
+                    :end-val="homeData.socialInsurance?.declaredTotal"
                     :duration="1000"
                   />
                 </div>
@@ -145,6 +145,7 @@
             </div>
             <div class="chart">
               <!-- 图表 -->
+              <div ref="social" style=" width: 100%; height:100% " />
             </div>
           </div>
         </div>
@@ -157,7 +158,7 @@
                 <span>申报人数</span>
                 <count-to
                   :start-val="0"
-                  :end-val="homeData.providentFund.declarationTotal"
+                  :end-val="homeData.providentFund?.declarationTotal"
                   :duration="1000"
                 />
               </div>
@@ -166,7 +167,7 @@
                   <span>待申报(人)</span>
                   <count-to
                     :start-val="0"
-                    :end-val="homeData.providentFund.toDeclareTotal"
+                    :end-val="homeData.providentFund?.toDeclareTotal"
                     :duration="1000"
                   />
                 </div>
@@ -174,7 +175,7 @@
                   <span>申报中(人)</span>
                   <count-to
                     :start-val="0"
-                    :end-val="homeData.providentFund.declaringTotal"
+                    :end-val="homeData.providentFund?.declaringTotal"
                     :duration="1000"
                   />
                 </div>
@@ -182,7 +183,7 @@
                   <span>已申报(人)</span>
                   <count-to
                     :start-val="0"
-                    :end-val="homeData.providentFund.declaredTotal"
+                    :end-val="homeData.providentFund?.declaredTotal"
                     :duration="1000"
                   />
                 </div>
@@ -190,6 +191,7 @@
             </div>
             <div class="chart">
               <!-- 图表 -->
+              <div ref="provident" style=" width: 100%; height:100% " />
             </div>
           </div>
         </div>
@@ -254,6 +256,7 @@
 import CountTo from 'vue-count-to'
 import { mapGetters } from 'vuex'
 import { getHomeData, getMessageList } from '@/api/home.js'
+import * as echarts from 'echarts' // 引入所有的echarts
 export default {
   components: {
     CountTo
@@ -269,9 +272,68 @@ export default {
   computed: {
     ...mapGetters(['name', 'avatar', 'company', 'departmentName'])
   },
+  watch: {
+    homeData() {
+      console.log(this.homeData)
+      // 图表设置
+      this.social.setOption({
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: this.homeData.socialInsurance?.xAxis
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            data: this.homeData.socialInsurance?.yAxis,
+            type: 'line',
+            areaStyle: {
+              color: '#04c9be' // 填充颜色
+            },
+            lineStyle: {
+              color: '#04c9be' // 线的颜色
+            }
+          }
+        ]
+      })
+
+      this.provident.setOption({
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: this.homeData.providentFund?.xAxis
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            data: this.homeData.providentFund?.yAxis,
+            type: 'line',
+            areaStyle: {
+              color: '#04c9be' // 填充颜色
+            },
+            lineStyle: {
+              color: '#04c9be' // 线的颜色
+            }
+          }
+        ]
+      })
+    }
+  },
   created() {
     this.getHomeData()
     this.getMessageList()
+  },
+  mounted() {
+    // 获取展示的数据 设置给图表
+    // 监听homeData的变化
+    // console.log(this.$refs.social)
+    this.social = echarts.init(this.$refs.social) // 初始化echart
+    // data中没有声明 不是响应式
+    this.provident = echarts.init(this.$refs.provident)
   },
   methods: {
     // 企业数据
