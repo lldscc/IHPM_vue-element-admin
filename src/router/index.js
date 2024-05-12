@@ -54,6 +54,7 @@ export const asyncRouter = [
 ]
 
 const createRouter = () => new Router({
+  mode: 'history',
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes // 静态路由
 })
