@@ -36,7 +36,7 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    // 解决跨域问题
+    // 开发环境 解决跨域问题
     proxy: {
       '/api': {
         target: 'https://heimahr.itheima.net/'
